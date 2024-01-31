@@ -1,10 +1,10 @@
 version: "3.1"
 services:
-  odoo15:
-    image: odoo:15.0
+  odoo17:
+    image: odoo:17.0
     platform: linux/amd64
     depends_on:
-      - db
+      - postgres
     ports:
       - "8069:8069"
     volumes:
@@ -12,17 +12,17 @@ services:
       - ./config:/etc/odoo
       - ./custom_addons:/mnt/extra-addons
     environment:
-      - HOST=db
+      - HOST=postgres
       - PORT=5432
       - USER=odoo
       - PASSWORD=odoo
 
-  db:
+  postgres:
     image: postgres
     environment:
       - POSTGRES_USER=odoo
       - POSTGRES_PASSWORD=odoo
-      - POSTGRES_DB=odoo15
+      - POSTGRES_DB=odoo17
       - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
       - postgres-db:/var/lib/postgresql/data/pgdata
@@ -32,7 +32,7 @@ services:
   pgadmin:
     image: dpage/pgadmin4
     depends_on:
-      - db
+      - postgres
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@admin.com
       PGADMIN_DEFAULT_PASSWORD: admin
